@@ -8,6 +8,26 @@
 char board[MAX][MAX];//represent board(2D)
 int size;            //hold board size 
 
+// Clear the game log at the start of a new game
+int clearLogFile()
+{
+    FILE *fp = fopen("game_log.txt", "w");   // Open for write, clears file
+    if (fp == NULL) return -1;
+    fprintf(fp, "=== Tic Tac Toe Game Log ===\n");
+    fclose(fp);
+    return 0;
+}
+
+// Log a move to the file
+int logMove(int player, int row, int col)
+{
+    FILE *fp = fopen("game_log.txt", "a");   // Open for append
+    if (fp == NULL) return -1;
+    fprintf(fp, "Player %d move: (%d, %d)\n", player, row + 1, col + 1); // 1-based coords
+    fclose(fp);
+    return 0;
+}
+
                                                     // 2D char array matches grid layout and allows EC access to rows, columns,& diagonal
 // board initialize
 int initBoard()
@@ -148,7 +168,9 @@ int playerMove(int player, char symbol)
             printf("⚠ Cell already occupied! Try a different cell.\n");
             continue;
         }
-        board[row - 1][col - 1] = symbol;                     //set playe symbol
+        board[row - 1][col - 1] = symbol ;             	      //set playe symbol
+        
+	logMove(player, row -1, col -1);                     // Log move
 
         break;                                                //exit input loop
     }
@@ -168,6 +190,8 @@ int computerMove(char symbol)
        	{
             board[row][col] = symbol;                         //pllace symbol
             printf("Computer places %c at (%d, %d).\n", symbol, row + 1, col + 1);
+
+	    logMove(0, row, col);                             // Use 0 for computer player
             break;                                            //move done
         }
     }
@@ -177,6 +201,7 @@ int computerMove(char symbol)
 // Two player mode
 int twoPlayerMode()
 {
+    clearLogFile();
     char symbols[2] = {'X', 'O'};
     int turn = 0;                                             //start with plyer 1
 
@@ -207,6 +232,7 @@ int twoPlayerMode()
 // Human vs computer mode
 int playVsComputer()
 {
+    clearLogFile();
     char symbols[2] = {'X', 'O'};
     int turn = 0;
 
@@ -247,6 +273,7 @@ int playVsComputer()
 // Three player mode with role selection human/computer
 int threePlayerMode()
 {
+    clearLogFile();
 
     char symbols[3] = {'X', 'O', 'Z'};
     int isHuman[3];                                           //track wich player human
@@ -292,6 +319,7 @@ int threePlayerMode()
 // Multiplayer mode (1-10 players)
 int multiplayerGame(int players)
 {
+    clearLogFile();
     if (players < 1) players = 1;
     if (players > 10) players = 10;                           //bountry check
 

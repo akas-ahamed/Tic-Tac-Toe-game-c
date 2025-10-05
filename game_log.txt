@@ -1,0 +1,5 @@
+=== Tic Tac Toe Game Log ===
+Player 1 move: (1, 1)
+Player 0 move: (1, 3)
+Player 1 move: (1, 2)
+Player 0 move: (2, 1)
